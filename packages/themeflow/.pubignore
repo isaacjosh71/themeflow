@@ -1,0 +1,10 @@
+# Dev tools and local build output; not needed by apps using themeflow.
+tool/
+build/
+.dart_tool/
+pubspec.lock
+test/goldens/failures/
+example/build/
+example/.dart_tool/
+example/pubspec.lock
+*.iml

@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    name: Analyze and test (${{ matrix.channel }} ${{ matrix.flutter }})
+    runs-on: ubuntu-latest
+    # Beta is an early warning for the next Flutter release, not a blocker.
+    continue-on-error: ${{ matrix.channel == 'beta' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - channel: stable
+            flutter: 3.44.4 # the SDK floor in pubspec.yaml
+          - channel: stable
+            flutter: any # latest stable
+          - channel: beta
+            flutter: any
+    defaults:
+      run:
+        working-directory: packages/themeflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.flutter }}
+          cache: true
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test example/lib
+      - run: flutter analyze --fatal-infos
+      - run: flutter test --exclude-tags golden --coverage
+      - name: Analyze the example
+        working-directory: packages/themeflow/example
+        run: flutter analyze --fatal-infos
+
+  goldens:
+    name: Golden images
+    # The goldens were recorded on macOS; rendering differs between OSes.
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: packages/themeflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.4
+          cache: true
+      - run: flutter pub get
+      - run: flutter test --tags golden
+      - name: Keep the diffs of failed goldens
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-failures
+          path: packages/themeflow/test/goldens/failures/
+
+  pub:
+    name: pub.dev score and publish check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/themeflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart pub publish --dry-run
+      - run: dart pub global activate pana
+      # pana converts the pubspec screenshots with the WebP tools, like pub.dev.
+      - run: sudo apt-get update && sudo apt-get install -y webp
+      # Fails when the package would lose any pub points.
+      - run: dart pub global run pana --no-warning --exit-code-threshold 0 .

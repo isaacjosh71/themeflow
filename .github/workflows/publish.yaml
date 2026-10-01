@@ -1,0 +1,27 @@
+name: Publish to pub.dev
+
+# Publishes when a tag like themeflow-v0.1.0 is pushed. Before the first run,
+# enable automated publishing for this repository and the tag pattern
+# themeflow-v{{version}} on the package's admin page on pub.dev.
+
+on:
+  push:
+    tags: ['themeflow-v[0-9]+.[0-9]+.[0-9]+*']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # lets pub.dev verify this workflow; no tokens are stored
+    defaults:
+      run:
+        working-directory: packages/themeflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1 # sets up the pub.dev credentials
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter test --exclude-tags golden
+      - run: dart pub publish --force

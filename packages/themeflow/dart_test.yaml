@@ -1,0 +1,3 @@
+tags:
+  golden:
+    description: Golden image tests. Rendering differs by OS, so CI runs them on macOS only.

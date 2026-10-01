@@ -1,0 +1,34 @@
+name: themeflow
+description: >-
+  Dark mode for an existing Flutter app in an afternoon: keeps your light
+  theme, derives a contrast-checked dark one, adds color tokens, saving and toggles.
+version: 0.1.0
+repository: https://github.com/isaacjosh71/themeflow/tree/main/packages/themeflow
+issue_tracker: https://github.com/isaacjosh71/themeflow/issues
+screenshots:
+  - description: An existing light theme, untouched in light mode.
+    path: doc/existing_app_light.png
+  - description: The same theme recolored for dark mode by themeflow.
+    path: doc/existing_app_dark.png
+  - description: Every palette token, contrast-checked.
+    path: doc/tokens_dark.png
+topics:
+  - theme
+  - dark-mode
+  - colors
+  - material-design
+  - accessibility
+
+environment:
+  sdk: ^3.12.0
+  flutter: ">=3.44.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ">=2.3.0 <3.0.0"
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
