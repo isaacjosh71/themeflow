@@ -589,7 +589,7 @@ themeflow/
 - `dart pub publish --dry-run`
 - matrix: the SDK floor, stable and beta
 
-**Release:** pushing a tag like `themeflow-v0.1.0` publishes from GitHub Actions through pub.dev's automated publishing (OIDC, so no tokens are stored). This only happens once you say go.
+**Release:** the first version is published by hand with `dart pub publish`, because pub.dev only offers automated publishing for a package that already exists. After that, pushing a tag like `themeflow-v0.2.0` publishes from GitHub Actions through pub.dev's automated publishing (OIDC, so no tokens are stored).
 
 **Docs**
 - A README that leads with the existing-app path and a GIF of a real app switching modes.

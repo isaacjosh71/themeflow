@@ -1,8 +1,12 @@
 name: Publish to pub.dev
 
-# Publishes when a tag like themeflow-v0.1.0 is pushed. Before the first run,
-# enable automated publishing for this repository and the tag pattern
-# themeflow-v{{version}} on the package's admin page on pub.dev.
+# Publishes when a tag like themeflow-v0.2.0 is pushed.
+#
+# pub.dev only offers automated publishing for a package that already exists,
+# so the first version is published by hand (`dart pub publish` in
+# packages/themeflow). Then, on the package's admin page on pub.dev, enable
+# automated publishing for this repository with the tag pattern
+# themeflow-v{{version}}.
 
 on:
   push:
